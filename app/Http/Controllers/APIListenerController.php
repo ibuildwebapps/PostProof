@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hit;
+use App\Models\Metadata;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class APIListenerController extends Controller
 {
     //This is a catch-all for /listener endpoint
-    public function index(Request $request)
+    public function index(Request $request, $tag = null)
     {
         $method = $request->method() ;
         $expectedContentTypes = $request->getAcceptableContentTypes() ;
@@ -20,8 +22,10 @@ class APIListenerController extends Controller
         $getData = $request->query() ;
         $requestHeaders = $request->header() ;
 
+        Log::info('Tag: ' . $tag) ;
         Log::info('Scheme: ' . $scheme) ;
         Log::info('Method: ' . $method) ;
+        Log::info('User Agent: ' . $request->userAgent()) ;
         Log::info('Expected Content Types: ' . json_encode($expectedContentTypes)) ;
         Log::info('Client IPs: ' . json_encode($clientIPs)) ;
         Log::info('Default Locale: ' . $defaultLocale) ;
@@ -34,13 +38,47 @@ class APIListenerController extends Controller
             else
                 Log::info($k . ' = ' . $v[0]) ;
 
-        $hit = Hit::create(['scheme' => $scheme,
+         $hit = Hit::create(['tag' => $tag ?? null,
+                        'scheme' => $scheme,
                                         'method' => $method,
                                         'expected_content_types' => json_encode($expectedContentTypes),
                                         'client_ips' => json_encode($clientIPs),
                                         'default_locale' => $defaultLocale,
+                                        'user_agent' => $request->userAgent(),
                                         'post_data' => json_encode($postData),
                                         'get_data' => json_encode($getData),
                                         'headers' => json_encode($requestHeaders)]) ;
+        if($hit)
+        {
+            //Write POST
+            foreach($postData AS $k => $v)
+            {
+                Metadata::create(['fk_hit_id' => $hit->id,
+                                     'metadata_key' => $k,
+                                     'metadata_value' => $v,
+                                     'metadata_type' => 'POST']) ;
+            }
+            //Write GET
+            foreach($getData AS $k => $v)
+            {
+                Metadata::create(['fk_hit_id' => $hit->id,
+                                  'metadata_key' => $k,
+                                  'metadata_value' => $v,
+                                  'metadata_type' => 'GET']) ;
+            }
+            //Write Headers
+            foreach($requestHeaders AS $k => $v)
+            {
+                Metadata::create(['fk_hit_id' => $hit->id,
+                                  'metadata_key' => $k,
+                                  'metadata_value' => $v,
+                                  'metadata_type' => 'HEADER']) ;
+            }
+
+            //If we are doing a passthrough, make the request here (refactor to helper function)
+            return Response::HTTP_OK;
+        }
+
+        return Response::HTTP_INTERNAL_SERVER_ERROR ;
     }
 }

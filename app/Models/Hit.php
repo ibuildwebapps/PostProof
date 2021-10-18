@@ -13,11 +13,13 @@ class Hit extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tag',
         'scheme',
         'method',
         'expected_content_types',
         'client_ips',
         'default_locale',
+        'user_agent',
         'post_data',
         'get_data',
         'headers',

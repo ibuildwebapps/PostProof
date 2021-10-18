@@ -10,12 +10,12 @@
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="{{ url('css/app.css') }}" rel="stylesheet">
 
-    <title>Hello, world!</title>
+    <title>Post:Proof</title>
 </head>
 <body>
 
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ url('/') }}">Post Proof</a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -129,10 +129,12 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">When</th>
+                        <th scope="col">Tag</th>
                         <th scope="col">Method</th>
-                        <th scope="col">Content</th>
+                        <th scope="col">Accept</th>
                         <th scope="col">Remote IP</th>
                         <th scope="col">Locale</th>
+                        <th scope="col">User Agent</th>
                         <th scope="col">GET</th>
                         <th scope="col">POST</th>
                         <th scope="col">Headers</th>
@@ -140,20 +142,23 @@
                     </thead>
                     <tbody>
                     @foreach($hits AS $hit)
-                    <tr>
+                    <tr onclick="window.location='{{ url('hit/' . $hit->id) }}'" style="cursor: pointer;">
                         <td>{{ $hit->id }}</td>
                         <td>{{ \Carbon\Carbon::create($hit->created_at)->diffForHumans() }}</td>
+                        <td>{{ $hit->tag }}</td>
                         <td>{{ $hit->scheme }}/{{ $hit->method }}</td>
                         <td>{{ $hit->expected_content_types }}</td>
                         <td>{{ $hit->client_ips }}</td>
                         <td>{{ $hit->default_locale }}</td>
+                        <td>{{ Str::limit($hit->user_agent, 25) }}</td>
                         <td>{{ Str::limit($hit->get_data, 25) }}</td>
-                        <td>{{  Str::limit($hit->post_data, 25) }}</td>
-                        <td>{{  Str::limit($hit->headers, 25) }}</td>
+                        <td>{{ Str::limit($hit->post_data, 25) }}</td>
+                        <td>{{ Str::limit($hit->headers, 25) }}</td>
                     </tr>
                     @endforeach
                     </tbody>
                 </table>
+                {{ $hits->render() }}
             </div>
         </main>
     </div>

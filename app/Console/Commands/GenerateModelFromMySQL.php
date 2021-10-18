@@ -67,7 +67,7 @@ class GenerateModelFromMySQL extends Command
         $files_exist = false;
         foreach ($this->tables as $table) {
             $files_exist = true;
-            if (file_exists('app/models/'.$this->camelCase1($table->name).'.php')) {
+            if (file_exists('app/Models/'.$this->camelCase1($table->name).'.php')) {
                 $this->error("Table: {$database_name}.{$table->name}");
             } else {
                 $this->info("Table: {$database_name}.{$table->name}");
@@ -101,7 +101,7 @@ class GenerateModelFromMySQL extends Command
                 $template_user = $this->getUserTable($database_name, $table);
                 $template      = (!$template_user) ? $template : $template_user;
             }
-            file_put_contents('app/models/'.$this->camelCase1($table->name).'.php', $template);
+            file_put_contents('app/Models/'.$this->camelCase1($table->name).'.php', $template);
 
         }
 
@@ -308,7 +308,7 @@ class GenerateModelFromMySQL extends Command
 							REFERENCED_COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
 							WHERE REFERENCED_TABLE_SCHEMA = '{$database}' AND REFERENCED_TABLE_NAME = '{$table}'
 							AND REFERENCED_TABLE_SCHEMA IS NOT NULL AND REFERENCED_TABLE_NAME IS NOT NULL
-							AND REFERENCED_COLUMN_NAME IS NOT NULL GROUP BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, 
+							AND REFERENCED_COLUMN_NAME IS NOT NULL GROUP BY TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME,
 							REFERENCED_TABLE_SCHEMA, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME ORDER BY COLUMN_NAME");
     }
 

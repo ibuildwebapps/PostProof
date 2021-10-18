@@ -14,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [\App\Http\Controllers\SiteController::class, 'index']) ;
+Route::get('hit/{id}', [\App\Http\Controllers\SiteController::class, 'show']) ;
 
-Route::any('listener', [\App\Http\Controllers\APIListenerController::class, 'index']) ;
+Route::any('listener/{tag?}', [\App\Http\Controllers\APIListenerController::class, 'index']) ;
