@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -32,5 +33,14 @@ class APIListenerController extends Controller
                 Log::info($k . ' = ' . json_encode($v)) ;
             else
                 Log::info($k . ' = ' . $v[0]) ;
+
+        $hit = Hit::create(['scheme' => $scheme,
+                                        'method' => $method,
+                                        'expected_content_types' => json_encode($expectedContentTypes),
+                                        'client_ips' => json_encode($clientIPs),
+                                        'default_locale' => $defaultLocale,
+                                        'post_data' => json_encode($postData),
+                                        'get_data' => json_encode($getData),
+                                        'headers' => json_encode($requestHeaders)]) ;
     }
 }
