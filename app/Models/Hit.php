@@ -16,12 +16,11 @@ class Hit extends Model
         'tag',
         'scheme',
         'method',
-        'expected_content_types',
-        'client_ips',
         'default_locale',
+        'remote_address',
+        'remote_host',
         'user_agent',
-        'post_data',
-        'get_data',
+        'raw_data',
         'headers',
     ];
 }

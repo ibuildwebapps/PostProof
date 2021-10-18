@@ -14,13 +14,16 @@ class APIListenerController extends Controller
     public function index(Request $request, $tag = null)
     {
         $method = $request->method();
-        $expectedContentTypes = $request->getAcceptableContentTypes();
-        $clientIPs = $request->getClientIps();
+        //$expectedContentTypes = $request->getAcceptableContentTypes();
+//        $clientIPs = $request->getClientIps();
         $defaultLocale = $request->getDefaultLocale();
         $scheme = $request->getScheme();
         $postData = $request->post();
         $getData = $request->query();
         $requestHeaders = $request->header();
+
+        //$request = Request::instance() ;
+        $rawData = $request->getContent();
 
 //        Log::info('Tag: ' . $tag);
 //        Log::info('Scheme: ' . $scheme);
@@ -40,16 +43,20 @@ class APIListenerController extends Controller
 //
 //        Log::info('creating hit');
 
-        $hit = Hit::create(['tag'                    => $tag ?? null,
-                            'scheme'                 => $scheme,
-                            'method'                 => $method,
-                            'expected_content_types' => json_encode($expectedContentTypes),
-                            'client_ips'             => json_encode($clientIPs),
-                            'default_locale'         => $defaultLocale,
-                            'user_agent'             => $request->userAgent(),
-                            'post_data'              => json_encode($postData),
-                            'get_data'               => json_encode($getData),
-                            'headers'                => json_encode($requestHeaders)]);
+        $hit = Hit::create(['tag'            => $tag ?? null,
+                            'scheme'         => $scheme,
+                            'method'         => $method,
+                            'remote_address'=> $request->ip(),
+                            'remote_host' => gethostbyaddr($request->ip()),
+                            //                            'expected_content_types' => json_encode($expectedContentTypes),
+                            //                            'client_ips'             => json_encode($clientIPs),
+                            'default_locale' => $defaultLocale,
+                            'user_agent'     => $request->userAgent(),
+                            // 'post_data'              => json_encode($postData),
+                            //  'get_data'               => json_encode($getData),
+                            'raw_data'       => $rawData,]
+                           // 'headers'        => json_encode($requestHeaders)]
+        );
         //Log::info('hit created');
 
         if ($hit)

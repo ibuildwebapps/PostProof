@@ -131,13 +131,11 @@
                         <th scope="col">When</th>
                         <th scope="col">Tag</th>
                         <th scope="col">Method</th>
-                        <th scope="col">Accept</th>
-                        <th scope="col">Remote IP</th>
                         <th scope="col">Locale</th>
                         <th scope="col">User Agent</th>
-                        <th scope="col">GET</th>
-                        <th scope="col">POST</th>
-                        <th scope="col">Headers</th>
+{{--                        <th scope="col">GET</th>--}}
+{{--                        <th scope="col">POST</th>--}}
+{{--                        <th scope="col">Headers</th>--}}
                     </tr>
                     </thead>
                     <tbody>
@@ -147,13 +145,13 @@
                         <td>{{ \Carbon\Carbon::create($hit->created_at)->diffForHumans() }}</td>
                         <td>{{ $hit->tag }}</td>
                         <td>{{ $hit->scheme }}/{{ $hit->method }}</td>
-                        <td>{{ $hit->expected_content_types }}</td>
-                        <td>{{ $hit->client_ips }}</td>
+{{--                        <td>{{ $hit->expected_content_types }}</td>--}}
+{{--                        <td>{{ $hit->client_ips }}</td>--}}
                         <td>{{ $hit->default_locale }}</td>
                         <td>{{ Str::limit($hit->user_agent, 25) }}</td>
-                        <td>{{ Str::limit($hit->get_data, 25) }}</td>
-                        <td>{{ Str::limit($hit->post_data, 25) }}</td>
-                        <td>{{ Str::limit($hit->headers, 25) }}</td>
+{{--                        <td>{{ Str::limit($hit->get_data, 25) }}</td>--}}
+{{--                        <td>{{ Str::limit($hit->post_data, 25) }}</td>--}}
+{{--                        <td>{{ Str::limit($hit->headers, 25) }}</td>--}}
                     </tr>
                     @endforeach
                     </tbody>
